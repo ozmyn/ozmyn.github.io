@@ -325,6 +325,20 @@
         <div class="meter"><i style="width:72%"></i></div>
       </div>
     </div>
+
+    <h2 class="sec-title" style="margin-top:34px; font-size:12px">toolbelt <span class="comment">// daily drivers</span></h2>
+    <div class="lab-row">
+      <span class="lab"><b>Burp Suite</b></span>
+      <span class="lab"><b>Nmap</b></span>
+      <span class="lab"><b>Nuclei</b></span>
+      <span class="lab"><b>Semgrep</b></span>
+      <span class="lab"><b>amass / subfinder</b></span>
+      <span class="lab"><b>katana / gau</b></span>
+      <span class="lab"><b>curl &amp; curl_cffi</b></span>
+      <span class="lab"><b>Playwright</b></span>
+      <span class="lab"><b>Git</b></span>
+      <span class="lab"><b>Linux / Bash</b></span>
+    </div>
   </div>
 </section>
 
@@ -346,8 +360,8 @@
     <h2 class="sec-title">track record <span class="comment">// updated as I go</span></h2>
 
     <div class="stat-grid" style="margin-bottom:26px">
-      <div class="stat"><div class="num dim" id="stat-programs">1</div><div class="lbl">Programs Tested</div></div>
-      <div class="stat"><div class="num dim" id="stat-valid">0</div><div class="lbl">Valid Findings</div></div>
+      <div class="stat"><div class="num" id="stat-programs">16</div><div class="lbl">Programs Tested</div></div>
+      <div class="stat"><div class="num" id="stat-valid">3</div><div class="lbl">Valid Findings</div></div>
       <div class="stat"><div class="num dim" id="stat-hof">0</div><div class="lbl">Hall of Fames</div></div>
       <div class="stat"><div class="num dim" id="stat-ctf">0</div><div class="lbl">CTF Events</div></div>
     </div>
@@ -359,45 +373,33 @@
         </thead>
         <tbody id="findings-body">
           <!--
-            TO ADD A FINDING: copy this row, fill it in, delete the empty-state div.
-            Only add findings you are ALLOWED to disclose (public writeup / fixed /
-            program allows disclosure). Never leak confidential program details.
-
-            <tr>
-              <td>program-name</td>
-              <td>Broken access control → IDOR on /api/v1/orders</td>
-              <td><span class="sev high">HIGH</span></td>
-              <td>Fixed &amp; disclosed</td>
-            </tr>
+            TO ADD A FINDING: copy a row, fill it in. Only add findings you are
+            ALLOWED to disclose. Keep rows non-sensitive: program, vuln class,
+            severity, status — no hostnames, PoCs or root-cause detail.
           -->
+          <tr>
+            <td>XP Inc <span style="color:var(--muted)">(HackerOne)</span></td>
+            <td>Subdomain takeover — Fastly/AEM unclaimed domains across 5 production brands (10+ hosts)</td>
+            <td><span class="sev high">HIGH</span></td>
+            <td>Confirmed → report ready</td>
+          </tr>
+          <tr>
+            <td>Marriott <span style="color:var(--muted)">(HackerOne)</span></td>
+            <td>Missing authorization (CWE-862) — state-changing REST endpoints reachable unauthenticated</td>
+            <td><span class="sev med">MED</span></td>
+            <td>Confirmed (live-verified)</td>
+          </tr>
+          <tr>
+            <td>Next.js / Vercel <span style="color:var(--muted)">(OSS review)</span></td>
+            <td>Forgeable internal prefetch header trusted on production servers — route-status oracle + header leak</td>
+            <td><span class="sev med">MED</span></td>
+            <td>Confirmed (source review)</td>
+          </tr>
         </tbody>
       </table>
-      <div class="empty-state" id="empty-state">
-        <span class="green">[ ]</span> no public disclosures yet — first hunt in progress.<br>
-        findings appear here once programs allow disclosure.
-      </div>
     </div>
-    <p class="disclaimer">Responsible disclosure only. Findings are published here solely when permitted by the relevant program's disclosure policy.</p>
+    <p class="disclaimer">Responsible disclosure only. Findings are published here solely when permitted by the relevant program's disclosure policy — technical detail is intentionally omitted.</p>
 
-    <h2 class="sec-title" style="margin-top:44px">journey</h2>
-    <div class="timeline">
-      <div class="t-item">
-        <div class="t-date">2024 — start</div>
-        <div class="t-title">First steps into security</div>
-        <div class="t-desc">Linux, networking fundamentals, first CTFs. Got hooked on web challenges.</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">2025 — leveling</div>
-        <div class="t-title">Web Security Academy + labs grind</div>
-        <div class="t-desc">PortSwigger Academy, HTB, VulnLab. Built a repeatable hunting methodology.</div>
-      </div>
-      <div class="t-item">
-        <div class="t-date">2026 — live hunting</div>
-        <div class="t-title">First live programs</div>
-        <div class="t-desc">Recon-first hunting on VDP programs with AI-assisted tooling. Track record building — watch this space.</div>
-      </div>
-      <!-- next milestone: add a t-item here when the first valid bug lands -->
-    </div>
   </div>
 </section>
 
@@ -406,8 +408,9 @@
     <h2 class="sec-title">contact <span class="comment">// open to collaboration</span></h2>
     <div class="contact-grid">
       <a class="contact-card" href="https://github.com/wiuumiuuu" target="_blank" rel="noopener"><span class="ico">[gh]</span> github.com/wiuumiuuu</a>
+      <a class="contact-card" href="https://www.linkedin.com/in/wiuumiuuu/" target="_blank" rel="noopener"><span class="ico">[in]</span> linkedin.com/in/wiuumiuuu</a>
       <a class="contact-card" href="mailto:wiuumiuuu@users.noreply.github.com"><span class="ico">[@]</span> wiuumiuuu@users.noreply.github.com</a>
-      <!-- add more: LinkedIn, X, HTB profile — copy a contact-card line -->
+      <!-- add more: X, HTB profile — copy a contact-card line -->
     </div>
   </div>
 </section>
