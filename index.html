@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wiuumiuuu — Bug Bounty Portfolio</title>
+<meta name="description" content="Abdul Rehman (wiuumiuuu) — cybersecurity student, bug bounty hunter, CTF player. Track record, skills and labs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e14;
+    --bg2: #0d1219;
+    --panel: #11161f;
+    --border: #1e2633;
+    --text: #c7d0dc;
+    --muted: #5c6a7d;
+    --green: #2dd4a7;
+    --cyan: #4cc9f0;
+    --amber: #f0b429;
+    --red: #ef476f;
+    --purple: #9b5de5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+  /* scanline texture */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 999;
+    background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(0,0,0,.12) 2px 4px);
+    opacity: .35;
+  }
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── top bar ─────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,14,20,.9); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .brand { color: var(--green); font-weight: 800; font-size: 15px; }
+  .brand::before { content: "┌─[ "; color: var(--muted); }
+  .brand::after { content: " ]"; color: var(--muted); }
+  nav .links { display: flex; gap: 20px; font-size: 13px; }
+  nav .links a { color: var(--muted); }
+  nav .links a::before { content: "./"; color: var(--green); }
+  nav .links a:hover { color: var(--text); text-decoration: none; }
+
+  /* ── hero ────────────────────────────── */
+  header { padding: 90px 0 70px; }
+  .prompt-line { color: var(--muted); font-size: 14px; }
+  .prompt-line b { color: var(--green); font-weight: 600; }
+  h1 {
+    font-size: clamp(30px, 6vw, 52px); font-weight: 800; letter-spacing: -1px;
+    margin: 10px 0 6px; color: #e8eef6;
+  }
+  h1 .accent { color: var(--green); }
+  .cursor {
+    display: inline-block; width: 12px; height: 1.1em; background: var(--green);
+    vertical-align: text-bottom; margin-left: 6px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .typed-line { color: var(--cyan); font-size: clamp(14px, 2.4vw, 18px); min-height: 1.8em; }
+  .hero-sub { color: var(--muted); margin-top: 18px; max-width: 640px; font-size: 14px; }
+  .hero-cta { margin-top: 28px; display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 10px 20px; font-size: 13px; font-weight: 600;
+    border: 1px solid var(--green); color: var(--green); border-radius: 4px;
+    transition: all .15s;
+  }
+  .btn:hover { background: var(--green); color: var(--bg); text-decoration: none; box-shadow: 0 0 20px rgba(45,212,167,.25); }
+  .btn.ghost { border-color: var(--border); color: var(--muted); }
+  .btn.ghost:hover { border-color: var(--cyan); color: var(--cyan); background: transparent; box-shadow: none; }
+
+  /* ── sections ────────────────────────── */
+  section { padding: 48px 0; border-top: 1px solid var(--border); }
+  .sec-title { font-size: 14px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 26px; }
+  .sec-title::before { content: "$ "; color: var(--green); }
+  .sec-title .comment { color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; font-size: 12px; margin-left: 12px; }
+
+  /* about */
+  .about-grid { display: grid; grid-template-columns: 1fr 300px; gap: 28px; }
+  .about-text { font-size: 14px; color: var(--text); }
+  .about-text p { margin-bottom: 12px; }
+  .about-text .hl { color: var(--green); }
+  .whoami {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px; font-size: 13px;
+  }
+  .whoami .bar { color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; }
+  .whoami .k { color: var(--cyan); }
+  .whoami .v { color: var(--text); }
+
+  /* skills */
+  .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+  .skill {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 18px; transition: border-color .15s, transform .15s;
+  }
+  .skill:hover { border-color: var(--green); transform: translateY(-2px); }
+  .skill .name { color: #e8eef6; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+  .skill .name::before { content: "> "; color: var(--green); }
+  .skill .desc { color: var(--muted); font-size: 12.5px; }
+  .meter { height: 5px; background: var(--bg2); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+  .meter i { display: block; height: 100%; background: linear-gradient(90deg, var(--green), var(--cyan)); border-radius: 3px; }
+
+  /* labs */
+  .lab-row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .lab {
+    border: 1px solid var(--border); background: var(--panel); border-radius: 6px;
+    padding: 10px 16px; font-size: 13px; color: var(--text); transition: all .15s;
+  }
+  .lab:hover { border-color: var(--cyan); text-decoration: none; }
+  .lab b { color: var(--cyan); font-weight: 600; }
+
+  /* stats */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+  .stat {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px; text-align: center;
+  }
+  .stat .num { font-size: 34px; font-weight: 800; color: var(--green); }
+  .stat .num.dim { color: var(--muted); }
+  .stat .lbl { color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; }
+
+  /* findings tracker */
+  .tracker { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 13.5px; }
+  .tracker table { width: 100%; border-collapse: collapse; }
+  .tracker th {
+    text-align: left; padding: 12px 18px; color: var(--muted); font-weight: 600; font-size: 11.5px;
+    text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); background: var(--bg2);
+  }
+  .tracker td { padding: 13px 18px; border-bottom: 1px solid var(--border); }
+  .tracker tr:last-child td { border-bottom: none; }
+  .sev { font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 3px; letter-spacing: 1px; }
+  .sev.crit { background: rgba(239,71,111,.15); color: var(--red); }
+  .sev.high { background: rgba(240,180,41,.15); color: var(--amber); }
+  .sev.med  { background: rgba(76,201,240,.15); color: var(--cyan); }
+  .sev.low  { background: rgba(155,93,229,.15); color: var(--purple); }
+  .empty-state { padding: 34px 18px; text-align: center; color: var(--muted); font-size: 13px; }
+  .empty-state .green { color: var(--green); }
+  .disclaimer { color: var(--muted); font-size: 11.5px; margin-top: 12px; }
+  .disclaimer::before { content: "# "; color: var(--green); }
+
+  /* timeline */
+  .timeline { position: relative; margin-left: 8px; padding-left: 26px; border-left: 1px solid var(--border); }
+  .t-item { position: relative; margin-bottom: 24px; }
+  .t-item::before {
+    content: ""; position: absolute; left: -31px; top: 6px; width: 9px; height: 9px;
+    background: var(--bg); border: 2px solid var(--green); border-radius: 50%;
+  }
+  .t-item .t-date { color: var(--green); font-size: 12px; font-weight: 600; }
+  .t-item .t-title { color: #e8eef6; font-size: 14px; font-weight: 600; margin: 2px 0; }
+  .t-item .t-desc { color: var(--muted); font-size: 12.5px; }
+
+  /* contact */
+  .contact-grid { display: flex; flex-wrap: wrap; gap: 14px; }
+  .contact-card {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 18px; font-size: 13px; color: var(--text); transition: all .15s;
+  }
+  .contact-card:hover { border-color: var(--green); text-decoration: none; }
+  .contact-card .ico { color: var(--green); font-weight: 800; }
+
+  footer { border-top: 1px solid var(--border); padding: 26px 0 40px; color: var(--muted); font-size: 12px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .exit { color: var(--green); }
+
+  @media (max-width: 720px) {
+    .about-grid { grid-template-columns: 1fr; }
+    nav .links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <span class="brand">wiuumiuuu@github.io</span>
+    <div class="links">
+      <a href="#about">about</a>
+      <a href="#skills">skills</a>
+      <a href="#labs">labs</a>
+      <a href="#record">record</a>
+      <a href="#contact">contact</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="prompt-line"><b>wiuumiuuu</b>@arch ~ $ cat profile.txt</div>
+    <h1>Abdul Rehman<span class="accent">_</span><span class="cursor"></span></h1>
+    <div class="typed-line"><span id="typed"></span></div>
+    <p class="hero-sub">
+      Computer Science student focused on cybersecurity, web application security and
+      vulnerability research. Hunting bugs on live programs, breaking labs, and
+      documenting everything I learn along the way.
+    </p>
+    <div class="hero-cta">
+      <a class="btn" href="https://github.com/wiuumiuuu" target="_blank" rel="noopener">github.com/wiuumiuuu</a>
+      <a class="btn ghost" href="#record">view track record ↓</a>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <h2 class="sec-title">whoami</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm a <span class="hl">cybersecurity &amp; CS student</span> who got hooked on
+        web security the first time a "broken" behavior turned into a real finding.
+        Since then I've been methodically working through web vulnerabilities —
+        from IDOR and broken access control to injection classes.</p>
+        <p>My workflow is simple: <span class="hl">recon → hypothesis → minimal-impact
+        verification → report</span>. I care about demonstrated exploitability, not
+        scanner noise — every claim backed by a reproducible path.</p>
+        <p>When I'm not hunting, I'm grinding lab platforms, playing CTFs, and
+        building tooling for my own workflow.</p>
+      </div>
+      <div class="whoami">
+        <div class="bar">wiuumiuuu@arch ~ -----------------------------</div>
+        <div><span class="k">Role&nbsp;&nbsp;:</span> <span class="v">Cybersecurity &amp; CS Student</span></div>
+        <div><span class="k">Focus :</span> <span class="v">Bug Hunting, Web Security</span></div>
+        <div><span class="k">Labs&nbsp;&nbsp;:</span> <span class="v">HTB / PortSwigger / VulnLab</span></div>
+        <div><span class="k">Status:</span> <span class="v">Building • Learning • Breaking</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <h2 class="sec-title">skills <span class="comment">// always leveling up</span></h2>
+    <div class="skill-grid">
+      <div class="skill">
+        <div class="name">Web Pentesting</div>
+        <div class="desc">Recon, surface mapping, manual testing, Burp workflow</div>
+        <div class="meter"><i style="width:80%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="name">Bug Bounty Hunting</div>
+        <div class="desc">Access control, IDOR, auth flows, business logic, SSRF</div>
+        <div class="meter"><i style="width:75%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="name">CTF Problem Solving</div>
+        <div class="desc">Web challenges, crypto basics, forensics, privesc</div>
+        <div class="meter"><i style="width:70%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="name">Linux / CLI</div>
+        <div class="desc">Daily driver, bash scripting, self-hosted tooling</div>
+        <div class="meter"><i style="width:85%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="name">Security Tooling</div>
+        <div class="desc">Building AI-assisted recon/proxy tooling, automation</div>
+        <div class="meter"><i style="width:65%"></i></div>
+      </div>
+      <div class="skill">
+        <div class="name">Reporting</div>
+        <div class="desc">Clear repro steps, impact analysis, evidence discipline</div>
+        <div class="meter"><i style="width:72%"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="labs">
+  <div class="wrap">
+    <h2 class="sec-title">labs <span class="comment">// where I practice</span></h2>
+    <div class="lab-row">
+      <a class="lab" href="https://www.hackthebox.com" target="_blank" rel="noopener"><b>HTB</b> — Academy &amp; Boxes</a>
+      <a class="lab" href="https://portswigger.net/web-security" target="_blank" rel="noopener"><b>PortSwigger</b> — Web Security Academy</a>
+      <a class="lab" href="https://www.vulnlab.com" target="_blank" rel="noopener"><b>VulnLab</b> — Chains &amp; Labs</a>
+      <a class="lab" href="https://tryhackme.com" target="_blank" rel="noopener"><b>TryHackMe</b> — Learning Paths</a>
+      <a class="lab" href="#"><b>CTFs</b> — Web Kids 2.0 &amp; events</a>
+    </div>
+  </div>
+</section>
+
+<section id="record">
+  <div class="wrap">
+    <h2 class="sec-title">track record <span class="comment">// updated as I go</span></h2>
+
+    <div class="stat-grid" style="margin-bottom:26px">
+      <div class="stat"><div class="num dim" id="stat-programs">1</div><div class="lbl">Programs Tested</div></div>
+      <div class="stat"><div class="num dim" id="stat-valid">0</div><div class="lbl">Valid Findings</div></div>
+      <div class="stat"><div class="num dim" id="stat-hof">0</div><div class="lbl">Hall of Fames</div></div>
+      <div class="stat"><div class="num dim" id="stat-ctf">0</div><div class="lbl">CTF Events</div></div>
+    </div>
+
+    <div class="tracker">
+      <table>
+        <thead>
+          <tr><th>Program</th><th>Vulnerability</th><th>Severity</th><th>Status</th></tr>
+        </thead>
+        <tbody id="findings-body">
+          <!--
+            TO ADD A FINDING: copy this row, fill it in, delete the empty-state div.
+            Only add findings you are ALLOWED to disclose (public writeup / fixed /
+            program allows disclosure). Never leak confidential program details.
+
+            <tr>
+              <td>program-name</td>
+              <td>Broken access control → IDOR on /api/v1/orders</td>
+              <td><span class="sev high">HIGH</span></td>
+              <td>Fixed &amp; disclosed</td>
+            </tr>
+          -->
+        </tbody>
+      </table>
+      <div class="empty-state" id="empty-state">
+        <span class="green">[ ]</span> no public disclosures yet — first hunt in progress.<br>
+        findings appear here once programs allow disclosure.
+      </div>
+    </div>
+    <p class="disclaimer">Responsible disclosure only. Findings are published here solely when permitted by the relevant program's disclosure policy.</p>
+
+    <h2 class="sec-title" style="margin-top:44px">journey</h2>
+    <div class="timeline">
+      <div class="t-item">
+        <div class="t-date">2024 — start</div>
+        <div class="t-title">First steps into security</div>
+        <div class="t-desc">Linux, networking fundamentals, first CTFs. Got hooked on web challenges.</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">2025 — leveling</div>
+        <div class="t-title">Web Security Academy + labs grind</div>
+        <div class="t-desc">PortSwigger Academy, HTB, VulnLab. Built a repeatable hunting methodology.</div>
+      </div>
+      <div class="t-item">
+        <div class="t-date">2026 — live hunting</div>
+        <div class="t-title">First live programs</div>
+        <div class="t-desc">Recon-first hunting on VDP programs with AI-assisted tooling. Track record building — watch this space.</div>
+      </div>
+      <!-- next milestone: add a t-item here when the first valid bug lands -->
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <h2 class="sec-title">contact <span class="comment">// open to collaboration</span></h2>
+    <div class="contact-grid">
+      <a class="contact-card" href="https://github.com/wiuumiuuu" target="_blank" rel="noopener"><span class="ico">[gh]</span> github.com/wiuumiuuu</a>
+      <a class="contact-card" href="mailto:wiuumiuuu@users.noreply.github.com"><span class="ico">[@]</span> wiuumiuuu@users.noreply.github.com</a>
+      <!-- add more: LinkedIn, X, HTB profile — copy a contact-card line -->
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><span class="exit">wiuumiuuu@arch ~ $</span> exit <span style="color:var(--muted)"># thanks for reading</span></span>
+    <span>© 2026 Abdul Rehman · built by hand, no template</span>
+  </div>
+</footer>
+
+<script>
+  // typing effect — cycles focus areas
+  const lines = [
+    "bug bounty hunter",
+    "web security student",
+    "CTF player",
+    "tool builder",
+  ];
+  const el = document.getElementById("typed");
+  let li = 0, ci = 0, deleting = false;
+  function tick() {
+    const line = lines[li];
+    el.textContent = "> " + line.slice(0, ci);
+    if (!deleting) {
+      if (ci < line.length) { ci++; setTimeout(tick, 55); }
+      else { deleting = true; setTimeout(tick, 1600); }
+    } else {
+      if (ci > 0) { ci--; setTimeout(tick, 28); }
+      else { deleting = false; li = (li + 1) % lines.length; setTimeout(tick, 350); }
+    }
+  }
+  tick();
+</script>
+
+</body>
+</html>
