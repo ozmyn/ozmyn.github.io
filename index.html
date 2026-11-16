@@ -374,30 +374,12 @@
   <div class="modal-box">
     <div class="term-bar"><i></i><i></i><i></i><span>wiuumiuuu@arch — custom tooling (built by me)</span><button class="close" id="tools-close" aria-label="close">×</button></div>
     <ul class="modal-list">
-      <li>
-        <div class="t-name">Scout</div>
-        <div class="t-desc">Stealth browser MCP — semantic click/type, visible + headless, Chrome &amp; Firefox engines, network capture, JWT/IDOR/CORS tooling, evidence export. 59 tools.</div>
-      </li>
-      <li>
-        <div class="t-name">Thrum</div>
-        <div class="t-desc">AI-first Burp-replacement proxy plugin — live HTTPS capture on 127.0.0.1:8888, repeater, fuzzer, match&amp;replace rules, session bank, passive scanner, live TUI panel. 18 tools.</div>
-      </li>
-      <li>
-        <div class="t-name">dragnet</div>
-        <div class="t-desc">Chained recon pipeline — runs the full agent chain (techid → domsweep → portsweep → crawlsweep → jsleak → cvematch) and merges findings.</div>
-      </li>
-      <li>
-        <div class="t-name">crawsweep / domsweep / portsweep</div>
-        <div class="t-desc">Recon agents — active crawl + archived URLs, subdomain enumeration, live-host probing with nuclei.</div>
-      </li>
-      <li>
-        <div class="t-name">jsleak / cvematch / techid</div>
-        <div class="t-desc">JS secret &amp; endpoint analysis, version-prioritized CVE lead matching, tech-stack fingerprinting.</div>
-      </li>
-      <li>
-        <div class="t-name">verify-finding.sh</div>
-        <div class="t-desc">Anti-false-positive gate — mechanically rejects findings without evidence, repro steps and FP justification before they count.</div>
-      </li>
+      <li><div class="t-name">Scout</div></li>
+      <li><div class="t-name">Thrum</div></li>
+      <li><div class="t-name">dragnet</div></li>
+      <li><div class="t-name">crawsweep / domsweep / portsweep</div></li>
+      <li><div class="t-name">jsleak / cvematch / techid</div></li>
+      <li><div class="t-name">verify-finding.sh</div></li>
     </ul>
   </div>
 </div>
@@ -429,37 +411,33 @@
     <div class="tracker">
       <table>
         <thead>
-          <tr><th>Program</th><th>Vulnerability</th><th>Severity</th><th>Status</th></tr>
+          <tr><th>Program</th><th>Vulnerability</th><th>Severity</th></tr>
         </thead>
         <tbody id="findings-body">
           <!--
             TO ADD A FINDING: copy a row, fill it in. Only add findings you are
             ALLOWED to disclose. Keep rows non-sensitive: program, vuln class,
-            severity, status — no hostnames, PoCs or root-cause detail.
+            severity — no hostnames, PoCs or root-cause detail.
           -->
           <tr>
             <td>inDrive <span style="color:var(--muted)">(HackerOne)</span></td>
             <td>Improper authorization in custom URL scheme handler — exported deep-link Activity loads arbitrary URLs into a WebView with a JS bridge → one-click forced logout + in-app phishing</td>
             <td><span class="sev med">MED</span></td>
-            <td>Reported (H1)</td>
           </tr>
           <tr>
             <td>XP Inc <span style="color:var(--muted)">(HackerOne)</span></td>
             <td>Subdomain takeover — Fastly/AEM unclaimed domains across 5 production brands (10+ hosts)</td>
             <td><span class="sev high">HIGH</span></td>
-            <td>Confirmed → report ready</td>
           </tr>
           <tr>
             <td>Marriott <span style="color:var(--muted)">(HackerOne)</span></td>
             <td>Missing authorization (CWE-862) — state-changing REST endpoints reachable unauthenticated</td>
             <td><span class="sev med">MED</span></td>
-            <td>Confirmed (live-verified)</td>
           </tr>
           <tr>
             <td>Next.js / Vercel <span style="color:var(--muted)">(OSS review)</span></td>
             <td>Forgeable internal prefetch header trusted on production servers — route-status oracle + header leak</td>
             <td><span class="sev med">MED</span></td>
-            <td>Confirmed (source review)</td>
           </tr>
         </tbody>
       </table>
