@@ -108,17 +108,6 @@
 
 <section>
   <div class="wrap">
-    <h2>what i did not confirm — on purpose</h2>
-    <ul>
-      <li>Session-token theft (<span class="hl">refresh_jwt</span>): the callback never fired — a feature-toggle whitelist rejected the untrusted host. Not claimed.</li>
-      <li>Local file read via file://: the WebView has universal file access enabled, but modern scoped storage blocked it in practice. Documented as a design weakness, not an exploit.</li>
-    </ul>
-    <div class="note">Honest negative findings matter as much as positives — they tell the vendor exactly where their existing mitigations already work.</div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
     <h2>outcome &amp; lessons</h2>
     <ul>
       <li>Reported to inDrive via HackerOne; closed as a duplicate of an earlier report for the same component — the bug class was real and already known to the program.</li>
