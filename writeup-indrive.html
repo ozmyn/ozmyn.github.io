@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One-click forced logout in inDrive — writeup · wiuumiuuu</title>
+<meta name="description" content="How I found a one-click forced logout in inDrive's Android app: exported deep-link Activity → WebView JS bridge. Reported to HackerOne.">
+<meta property="og:title" content="One-click forced logout in inDrive (Android) — writeup">
+<meta property="og:description" content="Deep link → WebView JS bridge, no allowlist — forced logout + in-app phishing primitive. Reported to HackerOne.">
+<meta property="og:image" content="https://wiuumiuuu.github.io/og-banner.png">
+<meta property="og:type" content="article">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0e14'/%3E%3Ctext x='8' y='44' font-family='monospace' font-size='30' font-weight='bold' fill='%232dd4a7'%3E%3E_%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0a0e14; --panel:#11161f; --border:#1e2633; --text:#c7d0dc; --muted:#5c6a7d; --green:#2dd4a7; --cyan:#4cc9f0; --amber:#f0b429; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'JetBrains Mono',monospace; line-height:1.75; }
+  .wrap { max-width:820px; margin:0 auto; padding:0 24px; }
+  nav { border-bottom:1px solid var(--border); padding:14px 0; }
+  nav .wrap { display:flex; justify-content:space-between; align-items:center; font-size:13px; }
+  .brand { color:var(--green); font-weight:800; }
+  .brand::before { content:"┌─[ "; color:var(--muted); }
+  .brand::after { content:" ]"; color:var(--muted); }
+  nav a { color:var(--muted); }
+  nav a:hover { color:var(--text); }
+  header { padding:56px 0 36px; }
+  .back { color:var(--muted); font-size:12.5px; }
+  .back:hover { color:var(--green); }
+  .back::before { content:"$ cd ../ "; color:var(--green); }
+  h1 { font-size:clamp(24px,4.5vw,38px); font-weight:800; color:#e8eef6; margin:14px 0 10px; line-height:1.3; }
+  .meta { color:var(--muted); font-size:12.5px; margin-bottom:8px; }
+  .meta b { color:var(--amber); font-weight:600; }
+  .meta .sev { background:rgba(240,180,41,.15); color:var(--amber); font-size:11px; font-weight:800; padding:2px 9px; border-radius:3px; letter-spacing:1px; }
+  section { padding:26px 0; border-top:1px solid var(--border); }
+  h2 { font-size:13px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#e8eef6; margin-bottom:14px; }
+  h2::before { content:"$ "; color:var(--green); }
+  p { font-size:14px; margin-bottom:14px; }
+  .hl { color:var(--green); }
+  .code {
+    background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    padding:16px 18px; font-size:12.5px; overflow-x:auto; margin:14px 0;
+    color:var(--cyan); white-space:pre;
+  }
+  .code .c { color:var(--muted); }
+  ul { margin:0 0 14px 22px; font-size:14px; }
+  li { margin-bottom:8px; }
+  .note { color:var(--muted); font-size:12.5px; border-left:2px solid var(--green); padding-left:14px; margin:18px 0; }
+  footer { border-top:1px solid var(--border); padding:24px 0 40px; color:var(--muted); font-size:12px; }
+  footer .exit { color:var(--green); }
+  @media (max-width:640px){ .code{font-size:11px;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <span class="brand">wiuumiuuu@github.io</span>
+    <a href="https://wiuumiuuu.github.io/">../ home</a>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <a class="back" href="https://wiuumiuuu.github.io/">home</a>
+    <h1>One-click forced logout: deep link → WebView JS bridge in inDrive (Android)</h1>
+    <div class="meta">inDrive · Android · <span class="sev">MED 6.3</span> · reported to HackerOne</div>
+    <div class="meta">static APK analysis + live testing · reported Nov 2026</div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>tldr</h2>
+    <p>inDrive's Android app ships an exported Activity (<span class="hl">WebDialogActivity</span>) reachable via the
+    <span class="hl">indrive://webdialog?url=...</span> deep link. It takes the <span class="hl">url</span> parameter and loads it
+    straight into an in-app WebView — no domain allowlist — with a JavaScript bridge attached unconditionally.
+    Any attacker link (browser, WhatsApp, SMS) opens attacker-controlled content <i>inside the real app</i>,
+    under legitimate inDrive branding, with bridge access.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>the bug</h2>
+    <ul>
+      <li>The Activity is <span class="hl">exported="true"</span> with a BROWSABLE/VIEW intent-filter for the indrive:// scheme.</li>
+      <li>Its handler passes the deep link's <span class="hl">url</span> query parameter through <span class="hl">Uri.decode</span> and loads it into the WebView — the http/https and domain checks only exist on a different code branch.</li>
+      <li>The JS bridge (<span class="hl">addJavascriptInterface</span>) is attached unconditionally, and the page's postMessage dispatcher enforces no per-action host check.</li>
+      <li>The key miss: an <i>older, deprecated</i> Activity had a referrer-package check that rejected browser launches — the current one shipped without it. Incomplete security migration.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>impact — confirmed live on my own device &amp; account</h2>
+    <ul>
+      <li><span class="hl">logout_with_message</span> — the headline: forced logout + attacker-controlled message rendered inside the authentic app. A high-conviction phishing primitive: "your account was blocked → re-enter your credentials here", with none of the usual external-browser signals.</li>
+      <li><span class="hl">copyToClipboard</span> — silent clipboard write (crypto-address swap) without confirmation.</li>
+      <li><span class="hl">openShareMenu</span> — native share sheet pre-filled with attacker text.</li>
+      <li><span class="hl">openCamera</span> — reaches the real KYC capture flow.</li>
+    </ul>
+    <p>The base vector is one-click (a tap on the link). On a Xiaomi/HyperOS device I verified an auto-trigger
+    variant firing the deep link <span class="hl">zero-click</span> — interaction requirements are device-dependent,
+    which is why the severity lands Medium 6.3, up to 7.3 High where zero-click applies.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>what i did not confirm — on purpose</h2>
+    <ul>
+      <li>Session-token theft (<span class="hl">refresh_jwt</span>): the callback never fired — a feature-toggle whitelist rejected the untrusted host. Not claimed.</li>
+      <li>Local file read via file://: the WebView has universal file access enabled, but modern scoped storage blocked it in practice. Documented as a design weakness, not an exploit.</li>
+    </ul>
+    <div class="note">Honest negative findings matter as much as positives — they tell the vendor exactly where their existing mitigations already work.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>outcome &amp; lessons</h2>
+    <ul>
+      <li>Reported to inDrive via HackerOne; closed as a duplicate of an earlier report for the same component — the bug class was real and already known to the program.</li>
+      <li><span class="hl">Lesson 1:</span> deep-link handlers are attack surface. Enumerate every exported Activity and every intent-filter before touching anything else.</li>
+      <li><span class="hl">Lesson 2:</span> security migrations are where bugs hide — diff the new component against the old one it replaced.</li>
+      <li><span class="hl">Lesson 3:</span> a JS bridge without a per-action host check turns any loaded page into a native-capability oracle.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><span class="exit">wiuumiuuu@arch ~ $</span> exit <span style="color:var(--muted)"># all testing on my own device &amp; account</span></span>
+    <span>© 2026 Abdul Rehman</span>
+  </div>
+</footer>
+
+</body>
+</html>
