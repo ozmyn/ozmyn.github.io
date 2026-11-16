@@ -80,7 +80,8 @@
   .term-bar i:nth-child(2) { background: #f0b429; }
   .term-bar i:nth-child(3) { background: #2dd4a7; }
   .term-bar span { color: var(--muted); font-size: 11px; margin-left: 6px; }
-  .term-frame img { width: 100%; display: block; }
+  .term-frame img { width: 100%; display: block; image-rendering: pixelated; }
+  .hero-visual { justify-self: center; width: 100%; max-width: 280px; }
   /* CRT scanlines over the image */
   .term-frame .scan {
     position: absolute; inset: 33px 0 0 0; pointer-events: none;
@@ -239,17 +240,19 @@
 
 <header>
   <div class="wrap">
-    <div class="prompt-line"><b>wiuumiuuu</b>@arch ~ $ cat profile.txt</div>
-    <h1>Abdul Rehman<span class="accent">_</span><span class="cursor"></span></h1>
-    <div class="typed-line"><span id="typed"></span></div>
-    <p class="hero-sub">
-      Computer Science student focused on cybersecurity, web application security and
-      vulnerability research. Hunting bugs on live programs, breaking labs, and
-      documenting everything I learn along the way.
-    </p>
-    <div class="hero-cta">
-      <a class="btn" href="https://github.com/wiuumiuuu" target="_blank" rel="noopener">github.com/wiuumiuuu</a>
-      <a class="btn ghost" href="#record">view track record ↓</a>
+    <div class="hero-text">
+      <div class="prompt-line"><b>wiuumiuuu</b>@arch ~ $ cat profile.txt</div>
+      <h1>Abdul Rehman<span class="accent">_</span><span class="cursor"></span></h1>
+      <div class="typed-line"><span id="typed"></span></div>
+      <p class="hero-sub">
+        Computer Science student focused on cybersecurity, web application security and
+        vulnerability research. Hunting bugs on live programs, breaking labs, and
+        documenting everything I learn along the way.
+      </p>
+      <div class="hero-cta">
+        <a class="btn" href="https://github.com/wiuumiuuu" target="_blank" rel="noopener">github.com/wiuumiuuu</a>
+        <a class="btn ghost" href="#record">view track record ↓</a>
+      </div>
     </div>
     <div class="hero-visual">
       <div class="term-frame">
