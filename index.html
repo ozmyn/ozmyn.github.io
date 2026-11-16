@@ -59,7 +59,7 @@
   /* ── hero ────────────────────────────── */
   header { padding: 90px 0 70px; }
   header .wrap {
-    display: grid; grid-template-columns: 1fr 320px; gap: 48px; align-items: center;
+    display: grid; grid-template-columns: 1fr 340px; gap: 40px; align-items: center;
   }
   /* animated terminal frame */
   .hero-visual { position: relative; }
@@ -138,7 +138,7 @@
   .whoami .bar { color: var(--green); border-bottom: 1px solid var(--border); padding-bottom: 7px; margin-bottom: 9px; font-weight: 600; }
   .whoami .k { color: var(--cyan); }
   .whoami .v { color: var(--text); }
-  .whoami div:not(.bar) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .whoami div:not(.bar) { white-space: nowrap; }
 
   /* skills */
   .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
@@ -201,6 +201,35 @@
   .t-item .t-date { color: var(--green); font-size: 12px; font-weight: 600; }
   .t-item .t-title { color: #e8eef6; font-size: 14px; font-weight: 600; margin: 2px 0; }
   .t-item .t-desc { color: var(--muted); font-size: 12.5px; }
+
+  /* toolbelt modal */
+  .modal {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(4,7,11,.75); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal.open { display: flex; }
+  .modal-box {
+    width: 100%; max-width: 560px; max-height: 80vh; overflow-y: auto;
+    background: var(--panel); border: 1px solid var(--green); border-radius: 10px;
+    box-shadow: 0 20px 80px rgba(45,212,167,.25); animation: modalin .18s ease-out;
+  }
+  @keyframes modalin { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .modal-box .term-bar .close {
+    margin-left: auto; background: none; border: none; color: var(--muted);
+    font-family: inherit; font-size: 15px; cursor: pointer; padding: 0 4px;
+  }
+  .modal-box .term-bar .close:hover { color: var(--red); }
+  .modal-list { padding: 18px 22px 22px; }
+  .modal-list li {
+    list-style: none; margin-bottom: 14px; font-size: 13px;
+  }
+  .modal-list li:last-child { margin-bottom: 0; }
+  .modal-list .t-name { color: var(--green); font-weight: 600; }
+  .modal-list .t-name::before { content: "> "; }
+  .modal-list .t-desc { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .lab.click { cursor: pointer; font-family: inherit; }
+  .lab.click:hover { border-color: var(--green); box-shadow: 0 0 16px rgba(45,212,167,.12); }
 
   /* contact */
   .contact-grid { display: flex; flex-wrap: wrap; gap: 14px; }
@@ -335,9 +364,43 @@
       <span class="lab"><b>Playwright</b></span>
       <span class="lab"><b>Git</b></span>
       <span class="lab"><b>Linux / Bash</b></span>
+      <button class="lab click" id="tools-btn" title="view my custom tooling"><b>custom tooling</b> — click to open ▸</button>
     </div>
   </div>
 </section>
+
+<!-- custom tooling popup -->
+<div class="modal" id="tools-modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="term-bar"><i></i><i></i><i></i><span>wiuumiuuu@arch — custom tooling (built by me)</span><button class="close" id="tools-close" aria-label="close">×</button></div>
+    <ul class="modal-list">
+      <li>
+        <div class="t-name">Scout</div>
+        <div class="t-desc">Stealth browser MCP — semantic click/type, visible + headless, Chrome &amp; Firefox engines, network capture, JWT/IDOR/CORS tooling, evidence export. 59 tools.</div>
+      </li>
+      <li>
+        <div class="t-name">Thrum</div>
+        <div class="t-desc">AI-first Burp-replacement proxy plugin — live HTTPS capture on 127.0.0.1:8888, repeater, fuzzer, match&amp;replace rules, session bank, passive scanner, live TUI panel. 18 tools.</div>
+      </li>
+      <li>
+        <div class="t-name">dragnet</div>
+        <div class="t-desc">Chained recon pipeline — runs the full agent chain (techid → domsweep → portsweep → crawlsweep → jsleak → cvematch) and merges findings.</div>
+      </li>
+      <li>
+        <div class="t-name">crawsweep / domsweep / portsweep</div>
+        <div class="t-desc">Recon agents — active crawl + archived URLs, subdomain enumeration, live-host probing with nuclei.</div>
+      </li>
+      <li>
+        <div class="t-name">jsleak / cvematch / techid</div>
+        <div class="t-desc">JS secret &amp; endpoint analysis, version-prioritized CVE lead matching, tech-stack fingerprinting.</div>
+      </li>
+      <li>
+        <div class="t-name">verify-finding.sh</div>
+        <div class="t-desc">Anti-false-positive gate — mechanically rejects findings without evidence, repro steps and FP justification before they count.</div>
+      </li>
+    </ul>
+  </div>
+</div>
 
 <section id="labs">
   <div class="wrap">
@@ -446,6 +509,13 @@
     }
   }
   tick();
+
+  // custom tooling popup — click to open, × / backdrop / Esc to close
+  const modal = document.getElementById("tools-modal");
+  document.getElementById("tools-btn").addEventListener("click", () => modal.classList.add("open"));
+  document.getElementById("tools-close").addEventListener("click", () => modal.classList.remove("open"));
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") modal.classList.remove("open"); });
 </script>
 
 </body>
