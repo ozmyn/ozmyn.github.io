@@ -357,8 +357,8 @@
     <h2 class="sec-title">track record <span class="comment">// updated as I go</span></h2>
 
     <div class="stat-grid" style="margin-bottom:26px">
-      <div class="stat"><div class="num" id="stat-programs">16</div><div class="lbl">Programs Tested</div></div>
-      <div class="stat"><div class="num" id="stat-valid">3</div><div class="lbl">Valid Findings</div></div>
+      <div class="stat"><div class="num" id="stat-programs">17</div><div class="lbl">Programs Tested</div></div>
+      <div class="stat"><div class="num" id="stat-valid">4</div><div class="lbl">Valid Findings</div></div>
       <div class="stat"><div class="num dim" id="stat-hof">0</div><div class="lbl">Hall of Fames</div></div>
       <div class="stat"><div class="num dim" id="stat-ctf">0</div><div class="lbl">CTF Events</div></div>
     </div>
@@ -374,6 +374,12 @@
             ALLOWED to disclose. Keep rows non-sensitive: program, vuln class,
             severity, status — no hostnames, PoCs or root-cause detail.
           -->
+          <tr>
+            <td>inDrive <span style="color:var(--muted)">(HackerOne)</span></td>
+            <td>Improper authorization in custom URL scheme handler — exported deep-link Activity loads arbitrary URLs into a WebView with a JS bridge → one-click forced logout + in-app phishing</td>
+            <td><span class="sev med">MED</span></td>
+            <td>Reported (H1)</td>
+          </tr>
           <tr>
             <td>XP Inc <span style="color:var(--muted)">(HackerOne)</span></td>
             <td>Subdomain takeover — Fastly/AEM unclaimed domains across 5 production brands (10+ hosts)</td>
