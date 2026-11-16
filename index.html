@@ -133,11 +133,12 @@
   .about-text .hl { color: var(--green); }
   .whoami {
     background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
-    padding: 18px; font-size: 13px;
+    padding: 14px 16px; font-size: 12.5px; align-self: start;
   }
-  .whoami .bar { color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; }
+  .whoami .bar { color: var(--green); border-bottom: 1px solid var(--border); padding-bottom: 7px; margin-bottom: 9px; font-weight: 600; }
   .whoami .k { color: var(--cyan); }
   .whoami .v { color: var(--text); }
+  .whoami div:not(.bar) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* skills */
   .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
@@ -269,22 +270,18 @@
     <h2 class="sec-title">whoami</h2>
     <div class="about-grid">
       <div class="about-text">
-        <p>I'm a <span class="hl">cybersecurity &amp; CS student</span> who got hooked on
-        web security the first time a "broken" behavior turned into a real finding.
-        Since then I've been methodically working through web vulnerabilities —
-        from IDOR and broken access control to injection classes.</p>
-        <p>My workflow is simple: <span class="hl">recon → hypothesis → minimal-impact
-        verification → report</span>. I care about demonstrated exploitability, not
-        scanner noise — every claim backed by a reproducible path.</p>
+        <p>I'm a <span class="hl">cybersecurity student</span> hooked on web security —
+        from IDOR and broken access control to injection classes, hunted
+        recon-first with a strict evidence discipline.</p>
         <p>When I'm not hunting, I'm grinding lab platforms, playing CTFs, and
         building tooling for my own workflow.</p>
       </div>
       <div class="whoami">
-        <div class="bar">wiuumiuuu@arch ~ -----------------------------</div>
-        <div><span class="k">Role&nbsp;&nbsp;:</span> <span class="v">Cybersecurity &amp; CS Student</span></div>
-        <div><span class="k">Focus :</span> <span class="v">Bug Hunting, Web Security</span></div>
-        <div><span class="k">Labs&nbsp;&nbsp;:</span> <span class="v">HTB / PortSwigger / VulnLab</span></div>
-        <div><span class="k">Status:</span> <span class="v">Building • Learning • Breaking</span></div>
+        <div class="bar">wiuumiuuu@arch ~</div>
+        <div><span class="k">Role&nbsp;&nbsp;:</span> <span class="v">Cybersecurity Student</span></div>
+        <div><span class="k">Focus :</span> <span class="v">Bug Hunting, Web Sec</span></div>
+        <div><span class="k">Labs&nbsp;&nbsp;:</span> <span class="v">HTB / PortSwigger / WEBKIDS 2.0</span></div>
+        <div><span class="k">Status:</span> <span class="v">Building • Breaking</span></div>
       </div>
     </div>
   </div>
@@ -348,9 +345,9 @@
     <div class="lab-row">
       <a class="lab" href="https://www.hackthebox.com" target="_blank" rel="noopener"><b>HTB</b> — Academy &amp; Boxes</a>
       <a class="lab" href="https://portswigger.net/web-security" target="_blank" rel="noopener"><b>PortSwigger</b> — Web Security Academy</a>
-      <a class="lab" href="https://www.vulnlab.com" target="_blank" rel="noopener"><b>VulnLab</b> — Chains &amp; Labs</a>
       <a class="lab" href="https://tryhackme.com" target="_blank" rel="noopener"><b>TryHackMe</b> — Learning Paths</a>
-      <a class="lab" href="#"><b>CTFs</b> — Web Kids 2.0 &amp; events</a>
+      <a class="lab" href="#"><b>WEBKIDS 2.0</b> — CTF</a>
+      <a class="lab" href="#"><b>CTFs</b> — events &amp; comps</a>
     </div>
   </div>
 </section>
@@ -409,7 +406,6 @@
     <div class="contact-grid">
       <a class="contact-card" href="https://github.com/wiuumiuuu" target="_blank" rel="noopener"><span class="ico">[gh]</span> github.com/wiuumiuuu</a>
       <a class="contact-card" href="https://www.linkedin.com/in/wiuumiuuu/" target="_blank" rel="noopener"><span class="ico">[in]</span> linkedin.com/in/wiuumiuuu</a>
-      <a class="contact-card" href="mailto:wiuumiuuu@users.noreply.github.com"><span class="ico">[@]</span> wiuumiuuu@users.noreply.github.com</a>
       <!-- add more: X, HTB profile — copy a contact-card line -->
     </div>
   </div>
