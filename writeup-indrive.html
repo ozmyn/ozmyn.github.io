@@ -106,18 +106,6 @@
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <h2>outcome &amp; lessons</h2>
-    <ul>
-      <li>Reported to inDrive via HackerOne; closed as a duplicate of an earlier report for the same component — the bug class was real and already known to the program.</li>
-      <li><span class="hl">Lesson 1:</span> deep-link handlers are attack surface. Enumerate every exported Activity and every intent-filter before touching anything else.</li>
-      <li><span class="hl">Lesson 2:</span> security migrations are where bugs hide — diff the new component against the old one it replaced.</li>
-      <li><span class="hl">Lesson 3:</span> a JS bridge without a per-action host check turns any loaded page into a native-capability oracle.</li>
-    </ul>
-  </div>
-</section>
-
 <footer>
   <div class="wrap">
     <span><span class="exit">wiuumiuuu@arch ~ $</span> exit <span style="color:var(--muted)"># all testing on my own device &amp; account</span></span>
