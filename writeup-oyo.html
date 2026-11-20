@@ -103,18 +103,11 @@
 
 <section>
   <div class="wrap">
-    <h2>the proof</h2>
-    <p>The interesting part: I didn't guess the key from strings — I <i>executed the shipped native library</i>.
-    A minimal JNI harness dlopens the patched ELF and calls the same entry points the app does:</p>
-    <div class="code">gcc -o jniharness jniharness.c -ldl
-LD_LIBRARY_PATH=. ./jniharness libapi-key-patched.so
-
-<span class="c"># output (masked)</span>
-API_KEY=[s6po********:pNcM********]
-AUTO_LOGIN_KEY=[V02o******...****Yv+E4=]  <span class="c"># base64 → 32-byte AES-256 key</span></div>
-    <p>Then an offline encrypt → decrypt roundtrip mirroring the app's own crypto class — same cipher
-    transformation, same padding — succeeded <span class="hl">bit-exactly</span>: all 10 credential fields
-    recovered from the blob format, using researcher-controlled dummy data only.</p>
+    <h2>methodology</h2>
+    <p>I didn't guess the key from strings — the shipped native library was executed the same way the app
+    executes it, and the result was confirmed with an offline roundtrip mirroring the app's own crypto class.
+    Testing used researcher-controlled dummy data only; no real user data was touched, and no scanners were
+    pointed at production.</p>
     <div class="note">Secrecy-by-unreachability fails the moment the artifact it depends on is public.
     A key inside a distributable APK is not a secret — it's an obfuscation with extra steps.</div>
   </div>
@@ -130,24 +123,6 @@ AUTO_LOGIN_KEY=[V02o******...****Yv+E4=]  <span class="c"># base64 → 32-byte A
       directly replayable against the HMS API: bookings, revenue data, pricing controls, guest data.</li>
       <li>Because ECB is deterministic and the key is public, the same credentials recover from any
       backup or data snapshot — the exposure scales across the entire partner fleet using the app.</li>
-    </ul>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>outcome &amp; lessons</h2>
-    <ul>
-      <li>Reported to OYO via HackerOne; closed as a duplicate of an earlier report for the same
-      component — the class was real and already known to the program. Triaged High (7 ~ 8.9).</li>
-      <li><span class="hl">Lesson 1:</span> exported components are the Android equivalent of unauthenticated
-      endpoints. Enumerate every provider/receiver/activity before touching anything else.</li>
-      <li><span class="hl">Lesson 2:</span> test crypto assumptions by executing the shipped binary, not by
-      eyeballing it. A JNI harness turns "probably extractable" into a proven key.</li>
-      <li><span class="hl">Lesson 3:</span> cross-app &lt;queries&gt; declarations in sibling apps are a free map
-      of which internal transports are actually live.</li>
-      <li><span class="hl">Lesson 4:</span> duplicate ≠ wasted. Triaged severity on the same class still proves
-      the finding quality — and the methodology transfers to every other app in the fleet.</li>
     </ul>
   </div>
 </section>
