@@ -440,7 +440,7 @@
 
     <div class="stat-grid" style="margin-bottom:26px">
       <div class="stat"><div class="num" id="stat-programs">17</div><div class="lbl">Programs Tested</div></div>
-      <div class="stat"><div class="num" id="stat-valid">5</div><div class="lbl">Valid Findings</div></div>
+      <div class="stat"><div class="num" id="stat-valid">6</div><div class="lbl">Valid Findings</div></div>
       <div class="stat"><div class="num dim" id="stat-hof">0</div><div class="lbl">Hall of Fames</div></div>
       <div class="stat"><div class="num dim" id="stat-ctf">0</div><div class="lbl">CTF Events</div></div>
     </div>
@@ -456,6 +456,11 @@
             ALLOWED to disclose. Keep rows non-sensitive: program, vuln class,
             severity — no hostnames, PoCs or root-cause detail.
           -->
+          <tr>
+            <td>Deriv <span style="color:var(--muted)">(HackerOne)</span></td>
+            <td>Open redirect + DOM XSS (CWE-601/CWE-79) — unvalidated <code>ext_platform_url</code> query param flows through official redirect chain into <code>window.location.replace()</code>; javascript: URI executes in session origin</td>
+            <td><span class="sev high">HIGH</span></td>
+          </tr>
           <tr>
             <td>OYO <span style="color:var(--muted)">(HackerOne)</span></td>
             <td>Improper export of Android components (CWE-926) — exported ContentProvider holding staff session tokens + PII, protected only by a hardcoded AES key shipped in the APK</td>
@@ -488,6 +493,7 @@
 
     <h2 class="sec-title" style="margin-top:44px">writeups <span class="comment">// how i found it</span></h2>
     <div class="lab-row">
+      <a class="lab" href="./writeup-deriv.html"><b>Deriv</b> — open redirect + javascript:-URI XSS via unvalidated ext_platform_url →</a>
       <a class="lab" href="./writeup-oyo.html"><b>OYO OS</b> — exported ContentProvider + hardcoded AES key → staff token theft →</a>
       <a class="lab" href="./writeup-indrive.html"><b>inDrive</b> — one-click forced logout via deep link → WebView JS bridge →</a>
       <!-- next writeup: copy this line, change href + text -->
