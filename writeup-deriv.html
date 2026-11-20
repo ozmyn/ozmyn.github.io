@@ -104,23 +104,13 @@
 
 <section>
   <div class="wrap">
-    <h2>the proof</h2>
-    <p>No-login persistence proof — the crafted value surviving the official hop chain, captured live:</p>
-    <div class="code"><span class="c"># attacker value rides every official Deriv redirect, INTACT</span>
-GET /?ext_platform_url=https://example.org/dh-poc
-<span class="c">→ 302 → deriv.com/?ext_platform_url=https://example.org/dh-poc</span>
-<span class="c">→ 302 → deriv.com/eu?ext_platform_url=https://example.org/dh-poc</span></div>
-    <p>For sink execution I used the js-redirect-sink-proof methodology: prove client-side sinks without
-    target accounts, by simulating the exact code path from the public source. The same chain from the
-    production bundle — route-history item → external-params → legacy redirect → <span class="hl">window.location.replace</span> —
-    reproduced in a local browser with the harmless payload produced programmatically verified execution:</p>
-    <div class="code"><span class="c"># local DOM-verified reproduction</span>
-document.title       → "XSS-EXEC-127.0.0.1"
-document.body.dataset["xss-exec"] → "true"   <span class="c"># both checked via DOM inspection</span></div>
-    <div class="note">Honest split of evidence categories: live capture proved the production redirect
-    propagation; local reproduction proved sink execution. Production-origin JS execution wasn't
-    independently captured — the testing network is region-gated from the Hub hosts. Stating that
-    distinction explicitly up front is what separates a credible report from an overclaim.</div>
+    <h2>methodology</h2>
+    <p>Found by reviewing the public client source and tracing where a query parameter enters client state
+    and which navigation sinks consume it. The redirect survival was observed in a live browser; the sink
+    behavior was confirmed in an isolated local reproduction — deliberately without touching any production
+    account, and without dropping any working exploit payload publicly.</p>
+    <div class="note">Honesty about what was and wasn't tested is part of the report's credibility:
+    separating live observation from local reproduction from origin-level claims is the discipline.</div>
   </div>
 </section>
 
@@ -139,26 +129,6 @@ document.body.dataset["xss-exec"] → "true"   <span class="c"># both checked vi
       <li><span class="hl">Chainable to account-flow confusion:</span> attacker-planted email/code values
       persisted to storage and auto-submitted by the update-email modal chain naturally into a full
       phishing-driven account-takeover pretext.</li>
-    </ul>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>outcome &amp; lessons</h2>
-    <ul>
-      <li>Reported to Deriv via HackerOne; closed as a duplicate of an earlier report on the same
-      parameter and code flow — the class was real and already known to the program. Triaged High (7 ~ 8.9).</li>
-      <li><span class="hl">Lesson 1:</span> validate at ingestion, not at the sink. One allowlist
-      (protocol + host) at param-ingest kills the whole class; validation deferred to N call sites
-      guarantees one is missed.</li>
-      <li><span class="hl">Lesson 2:</span> a value surviving a site's OWN official redirect chain is the
-      strongest legitimacy primitive an open redirect can offer — treat hop-persistence as an impact multiplier.</li>
-      <li><span class="hl">Lesson 3:</span> client-side sinks can be proven without ever touching the target:
-      simulate the exact code path from the public source, and separate evidence categories honestly
-      (live propagation vs local execution vs origin execution).</li>
-      <li><span class="hl">Lesson 4:</span> duplicate ≠ wasted. Triaged severity confirms the finding quality —
-      and the sink-proof methodology transfers to any SPA that trusts a query param through navigation.</li>
     </ul>
   </div>
 </section>
